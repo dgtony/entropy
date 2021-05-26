@@ -11,12 +11,16 @@ pub struct ByteStat {
 
 pub struct ByteFreq {
     bs: HashMap<u8, usize>,
+    count: usize,
 }
 
 impl ByteFreq {
     // initialize empty
     pub fn new() -> Self {
-        ByteFreq { bs: HashMap::new() }
+        ByteFreq {
+            bs: HashMap::new(),
+            count: 0,
+        }
     }
 
     pub fn from_bytes(bytes: &Vec<u8>) -> Self {
@@ -26,16 +30,15 @@ impl ByteFreq {
     }
 
     pub fn add(&mut self, byte: u8) {
-        let counter = self.bs.entry(byte).or_insert(0);
-        *counter += 1; // fixme r u sure it's ok?
+        let byte_counter = self.bs.entry(byte).or_insert(0);
+        *byte_counter += 1;
+        self.count += 1;
     }
 
     pub fn frequencies(&self) -> HashMap<u8, f64> {
-        let total = self.total_bytes();
         let mut fs: HashMap<u8, f64> = HashMap::with_capacity(self.bs.len());
-
         for (&b, &c) in self.bs.iter() {
-            fs.insert(b, c as f64 / total as f64);
+            fs.insert(b, c as f64 / self.count as f64);
         }
         fs
     }
@@ -59,8 +62,8 @@ impl ByteFreq {
     }
 
     #[inline]
-    fn total_bytes(&self) -> usize {
-        self.bs.iter().fold(0, |_, e| *e.1)
+    pub fn total_bytes(&self) -> usize {
+        self.count
     }
 }
 
