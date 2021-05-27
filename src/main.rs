@@ -10,7 +10,7 @@ fn main() {
     let fnames: Vec<String> = env::args().skip(1).collect();
 
     if fnames.is_empty() {
-        println!("Computing entropy for the files: provide some, plz.");
+        eprintln!("Computing entropy for the files: provide some, plz.");
         exit(1);
     }
 
@@ -23,7 +23,7 @@ fn main() {
             Ok(bytes) => {
                 let bf = ByteFreq::from_bytes(&bytes);
                 println!(
-                    "[OK]\t{}\t=>\tbytes: {},\tentropy: {}",
+                    "[OK]\t{}\t=>\tbytes: {},\tentropy: {:.4}",
                     fname,
                     bf.total_bytes(),
                     bf.entropy()
