@@ -1,6 +1,7 @@
 use std::cmp::max;
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::iter::FromIterator;
 
 #[derive(Debug, Default, PartialEq)]
 pub struct ByteStat {
@@ -65,6 +66,16 @@ impl ByteFreq {
     #[inline]
     pub fn total_bytes(&self) -> usize {
         self.count
+    }
+}
+
+impl FromIterator<u8> for ByteFreq {
+    fn from_iter<I: IntoIterator<Item = u8>>(iter: I) -> Self {
+        let mut bf = ByteFreq::new();
+        for b in iter {
+            bf.add(b);
+        }
+        bf
     }
 }
 
