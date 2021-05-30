@@ -42,10 +42,7 @@ impl Iterator for ChunkReader {
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.buffer_exhausted() {
-            let has_more = match self.fill_buffer() {
-                Ok(filled) => filled,
-                Err(_) => false,
-            };
+            let has_more = self.fill_buffer().unwrap_or(false);
             if !has_more {
                 return None;
             }

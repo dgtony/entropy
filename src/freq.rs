@@ -24,13 +24,6 @@ impl ByteFreq {
         }
     }
 
-    #[deprecated]
-    pub fn from_bytes(bytes: &Vec<u8>) -> Self {
-        let mut bf = Self::new();
-        bytes.iter().for_each(|&b| bf.add(b));
-        bf
-    }
-
     #[inline]
     pub fn add(&mut self, byte: u8) {
         let byte_counter = self.bs.entry(byte).or_insert(0);
