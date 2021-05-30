@@ -1,9 +1,14 @@
 mod freq;
+mod reader;
 
 use freq::ByteFreq;
+use reader::ChunkReader;
 use std::env;
-use std::fs::{metadata, read};
+use std::fs::{metadata, OpenOptions};
 use std::process::exit;
+
+// File buffer: 64Mb
+const BUFFER_SIZE: usize = 1 << 26;
 
 fn main() {
     // files to be processed
@@ -26,9 +31,11 @@ fn main() {
             // skip non-files
             continue;
         }
-        match read(&fname) {
-            Ok(bytes) => {
-                let bf = ByteFreq::from_bytes(&bytes);
+
+        match OpenOptions::new().read(true).open(&fname) {
+            Ok(file) => {
+                let reader = ChunkReader::new(file, BUFFER_SIZE);
+                let bf: ByteFreq = reader.collect();
                 println!(
                     "[OK]  {:<width$} => entropy: {:.5}, bytes: {}",
                     fname,
