@@ -59,7 +59,7 @@ impl ByteFreq {
 
     pub fn entropy(&self) -> f64 {
         let fs = self.frequencies();
-        fs.iter().fold(0.0, |_, (_, &f)| -1.0 * f * f.log2())
+        fs.iter().fold(0.0, |acc, (_, &f)| acc - f * f.log2()) / 8.0
     }
 
     #[inline]
