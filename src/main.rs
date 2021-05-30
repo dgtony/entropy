@@ -8,12 +8,19 @@ use std::process::exit;
 fn main() {
     // files to be processed
     let fnames: Vec<String> = env::args().skip(1).collect();
-
     if fnames.is_empty() {
         eprintln!("Computing entropy for the files: provide some, plz.");
         exit(1);
     }
 
+    // align filenames by the longest path
+    let fname_width = fnames
+        .iter()
+        .map(|n| n.len())
+        .max()
+        .expect("fnames not empty");
+
+    // compute entropy for the files one-by-one
     for fname in fnames {
         if !metadata(&fname).map(|md| md.is_file()).unwrap_or_default() {
             // skip non-files
@@ -23,13 +30,14 @@ fn main() {
             Ok(bytes) => {
                 let bf = ByteFreq::from_bytes(&bytes);
                 println!(
-                    "[OK]\t{}\t=>\tbytes: {},\tentropy: {:.4}",
+                    "[OK]  {:<width$} => entropy: {:.5}, bytes: {}",
                     fname,
+                    bf.entropy(),
                     bf.total_bytes(),
-                    bf.entropy()
+                    width = fname_width,
                 );
             }
-            Err(e) => println!("[ERR]\t{}\t=>\t{}", fname, e),
+            Err(e) => eprintln!("[ERR] {:<width$} => {}", fname, e, width = fname_width),
         }
     }
 }
