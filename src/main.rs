@@ -2,7 +2,7 @@ mod freq;
 
 use freq::ByteFreq;
 use std::env;
-use std::fs::read;
+use std::fs::{metadata, read};
 use std::process::exit;
 
 fn main() {
@@ -15,6 +15,10 @@ fn main() {
     }
 
     for fname in fnames {
+        if !metadata(&fname).map(|md| md.is_file()).unwrap_or_default() {
+            // skip non-files
+            continue;
+        }
         match read(&fname) {
             Ok(bytes) => {
                 let bf = ByteFreq::from_bytes(&bytes);
