@@ -43,6 +43,7 @@ impl ByteFreq {
         fs
     }
 
+    #[allow(dead_code)]
     pub fn stats(&self) -> Vec<ByteStat> {
         let mut stats: Vec<ByteStat> = zip_map(&self.bs, &self.frequencies())
             .iter()
@@ -94,7 +95,6 @@ where
 mod tests {
     use crate::freq::zip_map;
     use std::collections::HashMap;
-    use std::ops::Deref;
 
     #[test]
     fn zipper() {
