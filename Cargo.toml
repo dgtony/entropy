@@ -1,10 +1,8 @@
 [package]
 name = "entropy"
-version = "0.1.0"
-authors = ["Anton Dort-Golts <a.dort-golts@corp.mail.ru>"]
+version = "0.2.0"
+authors = ["Anton Dort-Golts <dortgolts@gmail.com>"]
 edition = "2018"
 description = "Utility for computing Shannon entropy of the files"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
